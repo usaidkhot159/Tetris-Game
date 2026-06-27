@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TETRIS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+
+  <div class="wrapper">
+
+    <!-- LEFT PANEL -->
+    <aside class="panel panel-left">
+      <div class="panel-block">
+        <span class="label">SCORE</span>
+        <span class="value" id="score">0</span>
+      </div>
+      <div class="panel-block">
+        <span class="label">HIGH SCORE</span>
+        <span class="value" id="high-score">0</span>
+      </div>
+      <div class="panel-block">
+        <span class="label">LEVEL</span>
+        <span class="value" id="level">1</span>
+      </div>
+      <div class="panel-block">
+        <span class="label">LINES</span>
+        <span class="value" id="lines">0</span>
+      </div>
+
+      <div class="controls-info">
+        <p class="label">CONTROLS</p>
+        <ul>
+          <li><kbd>←</kbd><kbd>→</kbd> Move</li>
+          <li><kbd>↑</kbd> Rotate</li>
+          <li><kbd>↓</kbd> Soft Drop</li>
+          <li><kbd>Space</kbd> Hard Drop</li>
+          <li><kbd>P</kbd> Pause</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- GAME AREA -->
+    <main class="game-area">
+      <div class="game-title">TETRIS</div>
+
+      <div class="canvas-wrapper">
+        <canvas id="game-canvas" width="300" height="600"></canvas>
+        <canvas id="ghost-canvas" width="300" height="600"></canvas>
+
+        <!-- Overlays -->
+        <div class="overlay" id="overlay-start">
+          <div class="overlay-box">
+            <div class="overlay-title">TETRIS</div>
+            <p>Classic block puzzle game</p>
+            <button class="btn" id="btn-start">START GAME</button>
+          </div>
+        </div>
+
+        <div class="overlay hidden" id="overlay-pause">
+          <div class="overlay-box">
+            <div class="overlay-title">PAUSED</div>
+            <button class="btn" id="btn-resume">RESUME</button>
+            <button class="btn btn-secondary" id="btn-restart-pause">RESTART</button>
+          </div>
+        </div>
+
+        <div class="overlay hidden" id="overlay-gameover">
+          <div class="overlay-box">
+            <div class="overlay-title">GAME OVER</div>
+            <p id="final-score-text">Score: 0</p>
+            <button class="btn" id="btn-restart">PLAY AGAIN</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="panel panel-right">
+      <div class="panel-block">
+        <span class="label">NEXT</span>
+        <canvas id="next-canvas" width="120" height="120"></canvas>
+      </div>
+
+      <div class="panel-block">
+        <span class="label">HOLD</span>
+        <canvas id="hold-canvas" width="120" height="120"></canvas>
+        <span class="hold-hint">Press C to hold</span>
+      </div>
+
+      <div class="panel-block combo-block hidden" id="combo-block">
+        <span class="label">COMBO</span>
+        <span class="value combo-value" id="combo-count">x0</span>
+      </div>
+
+      <button class="btn btn-secondary btn-panel" id="btn-pause-side">PAUSE</button>
+      <button class="btn btn-secondary btn-panel" id="btn-new-game">NEW GAME</button>
+    </aside>
+
+  </div>
+
+  <script src="tetris.js"></script>
+</body>
+</html>
