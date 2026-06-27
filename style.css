@@ -1,0 +1,357 @@
+/* ============================================================
+   TETRIS — style.css
+   Palette: Deep navy bg, electric cyan accent, neon piece colors
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:         #0b0d17;
+  --bg-panel:   #0f1220;
+  --bg-card:    #151929;
+  --accent:     #00f5d4;
+  --accent-dim: #00c9ad;
+  --accent-glow:#00f5d480;
+  --danger:     #ff4d6d;
+  --text:       #e0e8ff;
+  --text-dim:   #5a6a99;
+  --border:     #1e2840;
+  --grid-line:  #131726;
+
+  --cell: 30px;
+  --board-w: 300px;
+  --board-h: 600px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ---- Animated grid background ---- */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridScroll 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes gridScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 40px 40px; }
+}
+
+/* ---- Layout ---- */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px 16px;
+  min-height: 100vh;
+}
+
+/* ---- Panels ---- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 160px;
+  padding-top: 60px; /* align with canvas top roughly */
+}
+
+.panel-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* ---- Controls info ---- */
+.controls-info {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.controls-info .label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.controls-info ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.controls-info li {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--accent);
+  min-width: 22px;
+}
+
+/* ---- Main game area ---- */
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.game-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
+}
+
+/* ---- Canvas wrapper ---- */
+.canvas-wrapper {
+  position: relative;
+  width: var(--board-w);
+  height: var(--board-h);
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px var(--bg),
+    0 0 20px var(--accent-glow),
+    0 0 60px #00f5d420,
+    inset 0 0 30px #00000060;
+  overflow: hidden;
+}
+
+#game-canvas,
+#ghost-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#ghost-canvas {
+  pointer-events: none;
+}
+
+/* ---- Next / Hold canvases ---- */
+#next-canvas,
+#hold-canvas {
+  display: block;
+  width: 100%;
+  height: 100px;
+  margin-top: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.hold-hint {
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+/* ---- Combo ---- */
+.combo-block {
+  animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+.combo-value {
+  font-size: 28px;
+  color: #f9c74f;
+  text-shadow: 0 0 12px #f9c74f80;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--accent);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-secondary {
+  border-color: var(--text-dim);
+  color: var(--text-dim);
+}
+
+.btn-secondary:hover {
+  background: var(--text-dim);
+  color: var(--bg);
+  box-shadow: none;
+}
+
+.btn-panel {
+  margin-top: 4px;
+}
+
+/* ---- Overlays ---- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 13, 23, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 0 30px var(--accent-glow);
+  min-width: 200px;
+  text-align: center;
+}
+
+.overlay-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--accent);
+  text-shadow: 0 0 16px var(--accent-glow);
+  letter-spacing: 0.2em;
+}
+
+.overlay-box p {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.overlay-box .btn {
+  width: 160px;
+}
+
+/* ---- Line-clear flash animation ---- */
+@keyframes lineClear {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ---- Utility ---- */
+.hidden {
+  display: none !important;
+}
+
+/* ---- Responsive fallback ---- */
+@media (max-width: 700px) {
+  .wrapper {
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    padding: 12px 8px;
+  }
+
+  .panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .panel-left .controls-info { display: none; }
+
+  .panel-block { flex: 1 1 100px; }
+
+  html, body { overflow: auto; }
+}
